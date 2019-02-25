@@ -62,7 +62,7 @@ public class GameLogic {
     public void setBattleships(int[] ships, int playerIndex)
     {
 
-        if(ships.length/2 != NUMBEROFSHIPS || !(playerIndex == 1 || playerIndex == 2))
+        if(ships.length/2 != NUMBER_OF_SHIPS || !(playerIndex == 1 || playerIndex == 2))
         {
             //execption
         }
@@ -76,14 +76,28 @@ public class GameLogic {
                     {
                         for(int l = 0; l < ships[i+1]-ships[i+3]+2; l++)
                         {
-                            _field1[i][i+1+l] = 1;
+                            if(_field1[i][i+1+l] == 0)
+                            {
+                                _field1[i][i+1+l] = 1;
+                            }
+                            else
+                            {
+                                //exeption
+                            }
                         }
                     }
                     else if (ships[i+1] == ships[i+3]) // the y coordinate of two following coordinates is the same => the ship is faced horizontally
                     {
                         for(int l = 0; l < ships[i]-ships[i+2]+2; l++)
                         {
-                            _field1[i][i+1+l] = 1;
+                            _if(_field2[i][i+1+l] == 0)
+                            {
+                                _field2[i][i+1+l] = 1;
+                            }
+                            else
+                            {
+                                //exeption
+                            }
                         }
                     }
                     else
