@@ -3,6 +3,7 @@ import com.battleship.UserData;
 public class GameLogic {
     private int[][] _field1;
     private int[][] _field2;
+    //field integer meaning: 0 = water; 1 = living ship location; -1 = dead ship location; 2 = island
     private UserData _player1;
     private UserData _player2;
 
@@ -29,9 +30,19 @@ public class GameLogic {
         }
     }
 
-    /*public void shot(int x, int y, b)
+   /* public boolean shot(int x, int y, int playerIndex)
     {
-
+        switch (playerIndex)
+        {
+            case 1: if (_field1[x][y] == 1)
+                        {
+                            _field1[x][y] = -1;
+                            return true;
+                        }
+                        else
+            case 2: return shotsFired(_field2[x][y]);
+            default: return false;
+        }
     }*/
 
 
