@@ -10,7 +10,8 @@ data class UserData(
     val username: String,
     val email: String,
     val hashedPassword: String,
-    var tokens: MutableList<String>?
+    var tokens: MutableList<String>?,
+    var matchId: String?
 )
 
 
@@ -25,14 +26,12 @@ object MongoDB {
         userDataCollection = database.getCollection<UserData>()
     }
 
-    fun generateToken(length: Long): String {
-        val source = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞabcdefghijklmnopqrstuvwxyzäöüß0123456789"
-        return "Penis" + Random().ints(length, 0, source.length)
-            .asSequence()
-            .map(source::get)
-            .joinToString("")
-    }
 
+    fun getUser(username: String): Capsula<UserData> {
+        val userData = userDataCollection.findOne(UserData::username eq username)
+            ?: return Failure("Username does not exist!")
+        return Success(userData)
+    }
 
     fun register(registerInfo: RegisterInfo): Capsula<String> {
         println("MongoDB->REGISTER!!!!!!")
@@ -43,7 +42,8 @@ object MongoDB {
                 registerInfo.username,
                 registerInfo.email,
                 registerInfo.hashedPassword,
-                mutableListOf()
+                mutableListOf(),
+                null
             )
         )
         return login(registerInfo.username, registerInfo.hashedPassword)
@@ -66,6 +66,24 @@ object MongoDB {
         val userData = userDataCollection.findOne(UserData::username eq username)
             ?: return false
         return userData.tokens?.contains(token) ?: false
+    }
+
+    fun userAddMatch(username: String, matchId: String) {
+        val userData = userDataCollection.findOne(UserData::username eq username)
+            ?: return
+        userData.matchId = matchId
+        userDataCollection.updateOne(UserData::username eq username, userData)
+    }
+
+    fun userGetMatch(username: String): Capsula<String> {
+        val userData = userDataCollection.findOne(UserData::username eq username)
+            ?: return Failure("Username not found!")
+        val matchId = userData.matchId
+        return if (matchId == null)
+            Failure("No match found!")
+        else
+            Success(matchId)
+
     }
 
 }
