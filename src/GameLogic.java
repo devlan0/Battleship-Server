@@ -30,20 +30,31 @@ public class GameLogic {
         }
     }
 
-   /* public boolean shot(int x, int y, int playerIndex)
+    public boolean shot(int x, int y, int playerIndex)
     {
         switch (playerIndex)
         {
             case 1: if (_field1[x][y] == 1)
-                        {
-                            _field1[x][y] = -1;
-                            return true;
-                        }
-                        else
-            case 2: return shotsFired(_field2[x][y]);
+            {
+                _field1[x][y] = -1;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            case 2: if (_field2[x][y] == 1)
+            {
+                _field2[x][y] = -1;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
             default: return false;
         }
-    }*/
+    }
 
 
     public int[][] getSpielfeld(int playerIndex)
