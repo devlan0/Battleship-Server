@@ -1,5 +1,6 @@
 package com.battleship
 
+import com.battleship.MongoDB.isTokenValid
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.request.*
@@ -9,12 +10,12 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.gson.gson
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.*
-import java.io.*
 import java.text.DateFormat
 
-data class RegisterInfo(val username: String, val email: String, val passwordHash: String)
-data class LoginInfo(val username: String, val passwordHash: String)
-data class LoginRespond(val username: String, val passwordHash: String)
+data class RegisterInfo(val username: String, val email: String, val hashedPassword: String)
+data class RegisterResponse(val status:String, val token: String)
+data class LoginInfo(val username: String, val hashedPassword: String)
+data class LoginRespond(val username: String, val hashedPassword: String)
 
 data class SimpleResponse(val status: String, val message: String) {
     constructor(error: Error) : this("failure", error.message ?: "")
@@ -55,18 +56,22 @@ fun Application.module() {
 fun Routing.basic() {
 
 
+    get("/test"){
+        call.respond("success!!!!!!!!!!!!!!!!!!!!!! (Selber Pisser!)")
+    }
+
     post("/register") {
+        println("Application->REGISTER")
         val registerInfo = call.receiveOrNull<RegisterInfo>()
         if (registerInfo == null) {
             call.respond("arguments are missing!")
             return@post
         }
-        MongoDB.register(registerInfo)
-        //MongoDB.validateToken(veriInfo.profileId, veriInfo.token).patternFunc({
-        //    call.respond("true")
-        //}, { error ->
-        //    call.respond(error.message ?: "Unknown error")
-        //})
+        MongoDB.register(registerInfo).patternFunc({
+            call.respond(RegisterResponse("success", it))
+        },{
+            call.respond(SimpleResponse(it))
+        })
     }
 
     post("/login") {
@@ -75,18 +80,32 @@ fun Routing.basic() {
             call.respond("arguments are missing!")
             return@post
         }
-        val result = MongoDB.login(loginInfo.username, loginInfo.passwordHash)
+        val result = MongoDB.login(loginInfo.username, loginInfo.hashedPassword)
         call.respond(result)
     }
 
     route("/withVal") {
         intercept(ApplicationCallPipeline.Features) {
-            val profileId = call.request.headers["username"]
+            val username = call.request.headers["username"]
             val token = call.request.headers["token"]
-            if (profileId == null || token == null) {
+            if (username == null || token == null) {
                 call.respond("username/token missing!")
                 return@intercept finish()
             }
+            if(isTokenValid(username, token))
+                return@intercept
+            else
+                return@intercept finish()
+        }
+
+        post("/queueMatch"){
+            val username = call.request.headers["username"]?:return@post
+            MatchManager.queueMatch(username)
+        }
+
+        post("/matchFound"){
+            val username = call.request.headers["username"]?:return@post
+            MatchManager.queueMatch(username)
         }
     }
 

@@ -9,10 +9,9 @@ import kotlin.streams.asSequence
 data class UserData(
     val username: String,
     val email: String,
-    val passwordHash: String,
-    var tokens: MutableList<String>?)
-
-
+    val hashedPassword: String,
+    var tokens: MutableList<String>?
+)
 
 
 object MongoDB {
@@ -36,16 +35,24 @@ object MongoDB {
 
 
     fun register(registerInfo: RegisterInfo): Capsula<String> {
+        println("MongoDB->REGISTER!!!!!!")
         if (0 < userDataCollection.countDocuments(UserData::username eq registerInfo.username))
             return Failure("Username already taken!")
-        userDataCollection.insertOne(UserData(registerInfo.username, registerInfo.email,registerInfo.passwordHash , mutableListOf()))
-        return login(registerInfo.username, registerInfo.passwordHash)
+        userDataCollection.insertOne(
+            UserData(
+                registerInfo.username,
+                registerInfo.email,
+                registerInfo.hashedPassword,
+                mutableListOf()
+            )
+        )
+        return login(registerInfo.username, registerInfo.hashedPassword)
     }
 
     fun login(username: String, passwordHash: String): Capsula<String> {
         val userData = userDataCollection.findOne(UserData::username eq username)
             ?: return Failure("User not found!")
-        if (userData.passwordHash != passwordHash) return Failure("Password/Username wrong!")
+        if (userData.hashedPassword != passwordHash) return Failure("Password/Username wrong!")
 
         val newList = userData.tokens ?: mutableListOf<String>()
         val newToken = generateToken(0xA)
@@ -55,9 +62,15 @@ object MongoDB {
         return Success(newToken)
     }
 
+    fun isTokenValid(username: String, token: String): Boolean {
+        val userData = userDataCollection.findOne(UserData::username eq username)
+            ?: return false
+        return userData.tokens?.contains(token) ?: false
+    }
+
 }
 
 
 fun main(args: Array<String>) {
-    MongoDB.register(RegisterInfo("adolfhitler88", "deutsches@reich.ger","EvaBraunistHEIẞ"))
+    MongoDB.register(RegisterInfo("adolfhitler88", "deutsches@reich.ger", "EvaBraunistHEIẞ"))
 }
