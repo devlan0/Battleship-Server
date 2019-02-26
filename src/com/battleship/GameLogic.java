@@ -26,7 +26,15 @@ public class GameLogic {
     {
         _player1 = player1;
         _player2 = player2;
-        _currentTurn = (int) Math.ceil(Math.random());
+        long random01 = Math.round(Math.random());
+        if (random01==0)
+        {
+            _currentTurn = _player1;
+        }
+        else
+        {
+            _currentTurn = _player2;
+        }
         _field1 = new int[15][15];
         _field2 = new int[15][15];
         //fill both fields with zeros
