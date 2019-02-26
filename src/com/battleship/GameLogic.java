@@ -40,13 +40,13 @@ public class GameLogic {
         }
 
     }
-
-    public static void main(String[] args) {
+    //testmethode
+    /*public static void main(String[] args) {
         GameLogic testLogic = new GameLogic("Testspieler1", "Testspieler2");
         for (int k : testLogic.getField("TestSpieler1")) {
             System.out.print(k);
         }
-    }
+    }*/
 
     //public methods
     public boolean shot(int x, int y, String targetPlayerName)
@@ -218,4 +218,18 @@ public class GameLogic {
         return _currentTurn;
     }
 
+
+    public String getOtherPlayer(String playerName)
+    {
+        if(playerName.equals(_player1))
+        {
+            return _player2;
+        }
+        else if (playerName.equals(_player2))
+        {
+            return _player1;
+        }
+        throw new IllegalArgumentException("Invalid player name.");
+
+    }
 }
