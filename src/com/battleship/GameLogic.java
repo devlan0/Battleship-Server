@@ -1,5 +1,4 @@
 package com.battleship;
-
 import java.util.*;
 
 public class GameLogic {
@@ -23,40 +22,52 @@ public class GameLogic {
         _currentTurn = (int) Math.ceil(Math.random());
     }*/
 
-    public GameLogic(String player1, String player2) throws IllegalArgumentException {
+    public GameLogic(String player1, String player2) throws IllegalArgumentException
+    {
         _player1 = player1;
         _player2 = player2;
         long random01 = Math.round(Math.random());
-        if (random01 == 0) {
+        if (random01==0)
+        {
             _currentTurn = _player1;
-        } else {
+        }
+        else
+        {
             _currentTurn = _player2;
         }
         _field1 = new int[15][15];
         _field2 = new int[15][15];
         //fill both fields with zeros
-        int count = 0;
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                _field1[i][j] = count;
-                _field2[i][j] = count * (-1);
-                count++;
+        int o = 0;
+        for(int i = 0; i<15; i++)
+        {
+            for(int j = 0; j<15; j++)
+            {
+                _field1[i][j] = o;
+                _field2[i][j] = o*(-1);
+                o++;
             }
         }
 
     }
+
     //testmethode
     /*public static void main(String[] args) {
         GameLogic testLogic = new GameLogic("Testspieler1", "Testspieler2");
-        for (int k : testLogic.getField("TestSpieler1")) {
-            System.out.print(k);
+        for (int k : testLogic.getField("Testspieler1")) {
+            System.out.print(k + " ");
+        }
+        System.out.println("");
+        for (int k : testLogic.getField("Testspieler2")) {
+            System.out.print(k + " ");
         }
     }*/
 
     //public methods
-    public boolean shot(int x, int y, String playerName) {
-        if (playerName.equals(_player1)) {
-            if (_field2[x][y] == 1) //player1
+    public boolean shot(int x, int y, String playerName) throws IllegalArgumentException
+    {
+        if(playerName.equals(_player1)) {
+            if (_field2[x][y] == 1)
             {
                 _field2[x][y] = -1;
                 return true;
@@ -64,8 +75,10 @@ public class GameLogic {
                 _currentTurn = _player2;
                 return false;
             }
-        } else if (playerName.equals(_player2)) {
-            if (_field1[x][y] == 1) //player2
+        }
+        else if(playerName.equals(_player2))
+        {
+            if (_field1[x][y] == 1)
             {
                 _field1[x][y] = -1;
                 return true;
@@ -73,17 +86,23 @@ public class GameLogic {
                 _currentTurn = _player1;
                 return false;
             }
-        } else {
-            throw new IllegalArgumentException("Invalid player name.");
+        }
+        else
+        {
+            throw new IllegalArgumentException("Invalid player index.");
         }
     }
 
 
-    public void setBattleships(int[] ships, String playerName) throws IllegalArgumentException {
-        if (ships.length / 2 != NUMBER_OF_SHIPS || !(playerName.equals(_player1) || playerName.equals(_player2))) {
+    public void setBattleships(int[] ships, String playerName) throws IllegalArgumentException
+    {
+        if(ships.length/2 != NUMBER_OF_SHIPS || !(playerName.equals(_player1) || playerName.equals(_player2)))
+        {
             throw new IllegalArgumentException("Wrong amount of Ships or invalid player index.");
-        } else {
-            if (playerName.equals(_player1)) {
+        }
+        else
+        {
+            if(playerName.equals(_player1)) {
                 for (int i = 0; i < ships.length - 2; i += 2) {
                     if (ships[i] == ships[i + 2]) //the x coordinate of two following coordinates is the same => the ship is oriented vertically
                     {
@@ -107,36 +126,50 @@ public class GameLogic {
                         throw new IllegalArgumentException("At least one ship is just 1x1 in size.");
                     }
                 }
-            } else {
-                for (int i = 0; i < ships.length - 2; i += 2) {
-                    if (ships[i] == ships[i + 2]) //the x coordinate of two following coordinates is the same => the ship is oriented vertically
+            }
+            else
+            {
+                for(int i = 0; i<ships.length-2; i+=2)
+                {
+                    if(ships[i] == ships[i+2]) //the x coordinate of two following coordinates is the same => the ship is oriented vertically
                     {
-                        for (int l = 0; l < ships[i + 1] - ships[i + 3] + 2; l++) {
-                            if (_field2[i][i + 1 + l] == 0) {
-                                _field2[i][i + 1 + l] = 1;
-                            } else {
+                        for(int l = 0; l < ships[i+1]-ships[i+3]+2; l++)
+                        {
+                            if(_field2[i][i+1+l] == 0)
+                            {
+                                _field2[i][i+1+l] = 1;
+                            }
+                            else
+                            {
                                 throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
                             }
                         }
-                    } else if (ships[i + 1] == ships[i + 3]) // the y coordinate of two following coordinates is the same => the ship is faced horizontally
+                    }
+                    else if (ships[i+1] == ships[i+3]) // the y coordinate of two following coordinates is the same => the ship is faced horizontally
                     {
-                        for (int l = 0; l < ships[i] - ships[i + 2] + 2; l++) {
-                            if (_field2[i + 1 + l][i] == 0) {
-                                _field2[i + 1 + l][i] = 1;
-                            } else {
+                        for(int l = 0; l < ships[i]-ships[i+2]+2; l++)
+                        {
+                            if(_field2[i+1+l][i] == 0)
+                            {
+                                _field2[i+1+l][i] = 1;
+                            }
+                            else
+                            {
                                 throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
                             }
                         }
-                    } else {
+                    }
+                    else
+                    {
                         throw new IllegalArgumentException("At least one ship is just 1x1 in size.");
                     }
                 }
             }
         }
     }
-
-    public boolean didILose(String playerName) throws IllegalArgumentException {
-        if (playerName.equals(_player1)) {
+    public boolean didILose(String playerName) throws IllegalArgumentException
+    {
+        if(playerName.equals(_player1)) {
             for (int[] i : _field1) {
                 for (int j : i) {
                     if (j == 1) {
@@ -145,7 +178,9 @@ public class GameLogic {
                 }
             }
             return true;
-        } else if (playerName.equals(_player2)) {
+        }
+        else if(playerName.equals(_player2))
+        {
             for (int[] i : _field2) {
                 for (int j : i) {
                     if (j == 1) {
@@ -162,22 +197,28 @@ public class GameLogic {
 
     //Hilfsmethoden:
 
-    public int[] getField(String playerName) throws IllegalArgumentException {
-        if (playerName.equals(_player1)) {
+    public int[] getField(String playerName) throws IllegalArgumentException
+    {
+        if(playerName.equals(_player1))
+        {
             int[] streamField = new int[225];
             int count = 0;
-            for (int r = 0; r < 15; r++) {
-                for (int c = 0; c < 15; c++) {
+            for(int r = 0; r<15; r++) {
+                for(int c = 0; c<15; c++) {
                     streamField[count] = _field1[r][c];
+                    count++;
                 }
             }
             return streamField;
-        } else if (playerName.equals(_player2)) {
+        }
+        else if(playerName.equals(_player2))
+        {
             int[] streamField = new int[225];
             int count = 0;
             for (int r = 0; r < 15; r++) {
                 for (int c = 0; c < 15; c++) {
                     streamField[count] = _field2[r][c];
+                    count++;
                 }
             }
             return streamField;
@@ -186,15 +227,20 @@ public class GameLogic {
     }
 
 
-    public String getCurrentTurn() {
+    public String getCurrentTurn()
+    {
         return _currentTurn;
     }
 
 
-    public String getOtherPlayer(String playerName) throws IllegalArgumentException {
-        if (playerName.equals(_player1)) {
+    public String getOtherPlayer(String playerName) throws IllegalArgumentException
+    {
+        if(playerName.equals(_player1))
+        {
             return _player2;
-        } else if (playerName.equals(_player2)) {
+        }
+        else if (playerName.equals(_player2))
+        {
             return _player1;
         }
         throw new IllegalArgumentException("Invalid player name.");
