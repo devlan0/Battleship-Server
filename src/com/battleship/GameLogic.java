@@ -52,9 +52,6 @@ public class GameLogic {
         }
         _lastShotsPlayer1 = new ArrayList<Integer>();
         _lastShotsPlayer2 = new ArrayList<Integer>();
-
-
-
     }
 
     //testmethode
@@ -104,7 +101,7 @@ public class GameLogic {
     }
 
 
-    public void setBattleships(int[] ships, String playerName) throws IllegalArgumentException
+    public void setBattleships(int[] ships, String playerName)
     {
         if(ships.length/4 != NUMBER_OF_SHIPS || !(playerName.equals(_player1) || playerName.equals(_player2)))
         {
@@ -116,7 +113,7 @@ public class GameLogic {
                 for (int i = 0; i < ships.length - 2; i += 2) {
                     if (ships[i] == ships[i + 2]) //the x coordinate of two following coordinates is the same => the ship is oriented vertically
                     {
-                        for (int l = 0; l < ships[i + 1] - ships[i + 3] + 2; l++) {
+                        for (int l = 0; l < Math.abs(ships[i + 3] - ships[i + 1]) + 1; l++) {
                             if (_field1[i][i + l] == 0) {
                                 _field1[i][i + l] = 1;
                             } else {
@@ -125,7 +122,7 @@ public class GameLogic {
                         }
                     } else if (ships[i + 1] == ships[i + 3]) // the y coordinate of two following coordinates is the same => the ship is faced horizontally
                     {
-                        for (int l = 0; l < ships[i] - ships[i + 2] + 2; l++) {
+                        for (int l = 0; l < Math.abs(ships[i+2] - ships[i]) + 1; l++) {
                             if (_field1[i + l][i] == 0) {
                                 _field1[i + l][i] = 1;
                             } else {
@@ -133,7 +130,7 @@ public class GameLogic {
                             }
                         }
                     } else {
-                        throw new IllegalArgumentException("At least one ship is just 1x1 in size.");
+                        System.out.println("Es hat nicht zu hundert Prozent geklappt.");
                     }
                 }
             }
@@ -143,7 +140,7 @@ public class GameLogic {
                 {
                     if(ships[i] == ships[i+2]) //the x coordinate of two following coordinates is the same => the ship is oriented vertically
                     {
-                        for(int l = 0; l < ships[i+1]-ships[i+3]+2; l++)
+                        for(int l = 0; l < Math.abs(ships[i+3]-ships[i+1])+1; l++)
                         {
                             if(_field2[i][i+1+l] == 0)
                             {
@@ -157,7 +154,7 @@ public class GameLogic {
                     }
                     else if (ships[i+1] == ships[i+3]) // the y coordinate of two following coordinates is the same => the ship is faced horizontally
                     {
-                        for(int l = 0; l < ships[i]-ships[i+2]+2; l++)
+                        for(int l = 0; l < Math.abs(ships[i+2]-ships[i])+1; l++)
                         {
                             if(_field2[i+1+l][i] == 0)
                             {
@@ -171,7 +168,7 @@ public class GameLogic {
                     }
                     else
                     {
-                        throw new IllegalArgumentException("At least one ship is just 1x1 in size.");
+                        System.out.println("Es hat nicht zu hundert Prozent geklappt.");
                     }
                 }
             }
@@ -237,16 +234,16 @@ public class GameLogic {
     }
 
 
-    public CurrentTurnResponse getCurrentTurn()
+    /*public CurrentTurnResponse getCurrentTurn()
     {
-        if(_currentTurn == _player1) {
-            CurrentTurnResponse rensponse = new CurrentTurnResponse(_currentTurn, _lastShotsPlayer1.toArray());
+        if(_currentTurn ==_player1) {
+            CurrentTurnResponse response = new CurrentTurnResponse(_currentTurn, _lastShotsPlayer1.toArray());
             _lastShotsPlayer1.clear();
         } else if(_currentTurn == _player2) {
-            CurrentTurnResponse rensponse = new CurrentTurnResponse(_currentTurn, _lastShotsPlayer2.toArray()));
+            CurrentTurnResponse response = new CurrentTurnResponse(_currentTurn, _lastShotsPlayer2.toArray());
             _lastShotsPlayer2.clear();
         }
-    }
+    }*/
 
 
     public String getOtherPlayer(String playerName) throws IllegalArgumentException
