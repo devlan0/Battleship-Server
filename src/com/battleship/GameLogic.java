@@ -127,14 +127,14 @@ public class GameLogic {
                                 throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
                             }
                         }
-                    } else {
+                   } else {
                         for (int[] j1 : _field1){
                             for (int j2 : j1){
                                 System.out.print(j2);
                             }
                             System.out.println();
                         }
-                        throw new IllegalArgumentException("Es hat nicht zu hundert Prozent geklappt.");
+                        //throw new IllegalArgumentException("Es hat nicht zu hundert Prozent geklappt.");
                     }
                 }
             }
@@ -170,16 +170,16 @@ public class GameLogic {
                             }
                         }
                     }
-                    else
-                    {
-                        for (int[] j1 : _field2){
-                            for (int j2 : j1){
-                                System.out.print(j2);
-                            }
-                            System.out.println();
-                        }
-                        throw new IllegalArgumentException("At least one ship is just 1x1 in size.");
-                    }
+                   else
+                   {
+                       for (int[] j1 : _field2){
+                           for (int j2 : j1){
+                               System.out.print(j2);
+                           }
+                           System.out.println();
+                       }
+                       //throw new IllegalArgumentException("At least one ship is just 1x1 in size.");
+                   }
                 }
             }
         }

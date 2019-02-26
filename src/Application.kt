@@ -155,13 +155,13 @@ fun Routing.basic() {
         }
 
         post("submitBattleships") {
-            getGameLogic(call) { logic, _
-                                 , username ->
+            getGameLogic(call) { logic, _, username ->
                 val submitBattleshipsInfo = call.receiveOrNull<SubmitBattleshipsInfo>()
                     ?: return@getGameLogic Failure<Unit>("Missing arguments!")
                 return@getGameLogic try {
                     logic.setBattleships(submitBattleshipsInfo.battleships, username)
-                    Success(Unit)
+                    val result = logic.getField(username)
+                    SimpleResponse("success", "Battleships erfolgreich ins Feld geballert:\n$result")
                 } catch (e: IllegalArgumentException) {
                     Failure<Unit>(e.message ?: "Unknown message")
                 }
