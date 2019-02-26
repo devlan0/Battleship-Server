@@ -22,7 +22,7 @@ public class GameLogic {
         _currentTurn = (int) Math.ceil(Math.random());
     }*/
 
-    public GameLogic(String player1, String player2)
+    public GameLogic(String player1, String player2) throws IllegalArgumentException
     {
         _player1 = player1;
         _player2 = player2;
@@ -38,12 +38,14 @@ public class GameLogic {
         _field1 = new int[15][15];
         _field2 = new int[15][15];
         //fill both fields with zeros
+        int count = 0;
         for(int i = 0; i<15; i++)
         {
             for(int j = 0; j<15; j++)
             {
-                _field1[i][j] = 0;
-                _field2[i][j] = 0;
+                _field1[i][j] = count;
+                _field2[i][j] = count*(-1);
+                count++;
             }
         }
 
@@ -87,7 +89,7 @@ public class GameLogic {
     }
 
 
-    public void setBattleships(int[] ships, String playerName)
+    public void setBattleships(int[] ships, String playerName) throws IllegalArgumentException
     {
         if(ships.length/2 != NUMBER_OF_SHIPS || !(playerName.equals(_player1) || playerName.equals(_player2)))
         {
@@ -160,7 +162,7 @@ public class GameLogic {
             }
         }
     }
-    public boolean didILose(String playerName)
+    public boolean didILose(String playerName) throws IllegalArgumentException
     {
         if(playerName.equals(_player1)) {
             for (int[] i : _field1) {
@@ -190,7 +192,7 @@ public class GameLogic {
 
     //Hilfsmethoden:
 
-    public int[] getField(String playerName)
+    public int[] getField(String playerName) throws IllegalArgumentException
     {
         if(playerName.equals(_player1))
         {
@@ -227,7 +229,7 @@ public class GameLogic {
     }
 
 
-    public String getOtherPlayer(String playerName)
+    public String getOtherPlayer(String playerName) throws IllegalArgumentException
     {
         if(playerName.equals(_player1))
         {
