@@ -41,12 +41,12 @@ public class GameLogic {
 
     }
 
-
-    //main method
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
+        GameLogic testLogic = new GameLogic("Testspieler1", "Testspieler2");
+        for (int k : testLogic.getField("TestSpieler1")) {
+            System.out.print(k);
+        }
     }
-
 
     //public methods
     public boolean shot(int x, int y, String targetPlayerName)
