@@ -230,6 +230,5 @@ public class GameLogic {
             return _player1;
         }
         throw new IllegalArgumentException("Invalid player name.");
-
     }
 }
