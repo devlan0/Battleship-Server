@@ -49,23 +49,23 @@ public class GameLogic {
     }*/
 
     //public methods
-    public boolean shot(int x, int y, String targetPlayerName)
+    public boolean shot(int x, int y, String playerName)
     {
-        if(targetPlayerName.equals(_player1)) {
-            if (_field1[x][y] == 1) //player1
+        if(playerName.equals(_player1)) {
+            if (_field2[x][y] == 1) //player1
             {
-                _field1[x][y] = -1;
+                _field2[x][y] = -1;
                 return true;
             } else {
                 _currentTurn = 2;
                 return false;
             }
         }
-        else if(targetPlayerName.equals(_player2))
+        else if(playerName.equals(_player2))
         {
-            if (_field2[x][y] == 1) //player2
+            if (_field1[x][y] == 1) //player2
             {
-                _field2[x][y] = -1;
+                _field1[x][y] = -1;
                 return true;
             } else {
                 _currentTurn = 1;
