@@ -18,7 +18,7 @@ data class LoginRespond(val status: String, val token: String)
 
 data class MatchFoundResponse(val status: String, val matchId: String, val map: IntArray, val opponent: String)
 
-data class CurrentTurnResponse(val string: String, val lastShots: IntArray)
+data class CurrentTurnResponse(val currentUser: String, val lastShots: List<Int>)
 data class SubmitBattleshipsInfo(val battleships: IntArray)
 data class ShotsFiredInfo(val x: Int, val y: Int)
 
@@ -143,16 +143,20 @@ fun Routing.basic() {
         }
 
         get("currentTurn") {
-            getGameLogic(call) { logic, matchId, username ->
-                return@getGameLogic if (logic.currentTurn == username)
-                    SimpleResponse("success", "It is your turn.")
-                else
-                    SimpleResponse("success", "Waiting for opponent!")
+            getGameLogic(call) { logic, _, _ ->
+                val currentTurnResponse = logic.currentTurn
+                return@getGameLogic try {
+                    logic.currentTurn
+
+                } catch (e: IllegalArgumentException) {
+                    Failure<Unit>(e.message ?: "Unknown message")
+                }
             }
         }
 
         post("submitBattleships") {
-            getGameLogic(call) { logic, matchId, username ->
+            getGameLogic(call) { logic, _
+                                 , username ->
                 val submitBattleshipsInfo = call.receiveOrNull<SubmitBattleshipsInfo>()
                     ?: return@getGameLogic Failure<Unit>("Missing arguments!")
                 return@getGameLogic try {
@@ -169,7 +173,7 @@ fun Routing.basic() {
                 val shotsFiredInfo = call.receiveOrNull<ShotsFiredInfo>()
                     ?: return@getGameLogic Failure<Unit>("Missing arguments!")
                 return@getGameLogic try {
-                    logic.shot(shotsFiredInfo.x,  shotsFiredInfo.y, username)
+                    logic.shot(shotsFiredInfo.x, shotsFiredInfo.y, username)
                     Success(Unit)
                 } catch (e: IllegalArgumentException) {
                     Failure<Unit>(e.message ?: "Unknown message")

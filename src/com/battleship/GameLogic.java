@@ -11,7 +11,7 @@ public class GameLogic {
     private String _currentTurn; // 1 = _player1; 2 = _player2
     private ArrayList<Integer> _lastShotsPlayer1;
     private ArrayList<Integer> _lastShotsPlayer2;
-    private static final int NUMBER_OF_SHIPS = 6;
+    private static final int NUMBER_OF_SHIPS = 3;
 
 
     //Constructors
@@ -40,14 +40,12 @@ public class GameLogic {
         _field1 = new int[15][15];
         _field2 = new int[15][15];
         //fill both fields with values
-        int o = 0;
         for(int i = 0; i<15; i++)
         {
             for(int j = 0; j<15; j++)
             {
-                _field1[i][j] = o;
-                _field2[i][j] = o*(-1);
-                o++;
+                _field1[i][j] = 0;
+                _field2[i][j] = 0;
             }
         }
         _lastShotsPlayer1 = new ArrayList<Integer>();
@@ -126,9 +124,17 @@ public class GameLogic {
                             if (_field1[i + l][i] == 0) {
                                 _field1[i + l][i] = 1;
                             } else {
-                                throw new IllegalArgumentException("not placed in water");
+                                throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
                             }
                         }
+                    } else {
+                        for (int[] j1 : _field1){
+                            for (int j2 : j1){
+                                System.out.print(j2);
+                            }
+                            System.out.println();
+                        }
+                        throw new IllegalArgumentException("Es hat nicht zu hundert Prozent geklappt.");
                     }
                 }
             }
@@ -163,6 +169,16 @@ public class GameLogic {
                                 throw new IllegalArgumentException("not placed in water");
                             }
                         }
+                    }
+                    else
+                    {
+                        for (int[] j1 : _field2){
+                            for (int j2 : j1){
+                                System.out.print(j2);
+                            }
+                            System.out.println();
+                        }
+                        throw new IllegalArgumentException("At least one ship is just 1x1 in size.");
                     }
                 }
             }
@@ -228,16 +244,18 @@ public class GameLogic {
     }
 
 
-    /*public CurrentTurnResponse getCurrentTurn()
+    public CurrentTurnResponse getCurrentTurn()
     {
-        if(_currentTurn ==_player1) {
-            CurrentTurnResponse response = new CurrentTurnResponse(_currentTurn, _lastShotsPlayer1.toArray());
+        if(_currentTurn.equals(_player1)) {
             _lastShotsPlayer1.clear();
-        } else if(_currentTurn == _player2) {
-            CurrentTurnResponse response = new CurrentTurnResponse(_currentTurn, _lastShotsPlayer2.toArray());
+            return new CurrentTurnResponse(_currentTurn, _lastShotsPlayer1);
+        } else if(_currentTurn.equals(_player2)) {
             _lastShotsPlayer2.clear();
+            return new CurrentTurnResponse(_currentTurn, _lastShotsPlayer2);
+        }else{
+            throw new IllegalArgumentException("Current turn system broken! Server is exploding!");
         }
-    }*/
+    }
 
 
     public String getOtherPlayer(String playerName) throws IllegalArgumentException
