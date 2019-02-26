@@ -18,7 +18,7 @@ data class LoginRespond(val status: String, val token: String)
 
 data class MatchFoundResponse(val status: String, val matchId: String, val map: IntArray, val opponent: String)
 
-data class IsMyTurnResponse(val string: String, val lastShots: IntArray)
+data class CurrentTurnResponse(val string: String, val lastShots: IntArray)
 data class SubmitBattleshipsInfo(val battleships: IntArray)
 data class ShotsFiredInfo(val x: Int, val y: Int)
 
@@ -142,7 +142,7 @@ fun Routing.basic() {
             }
         }
 
-        get("isMyTurn") {
+        get("currentTurn") {
             getGameLogic(call) { logic, matchId, username ->
                 return@getGameLogic if (logic.currentTurn == username)
                     SimpleResponse("success", "It is your turn.")
