@@ -18,7 +18,9 @@ data class LoginRespond(val status: String, val token: String)
 
 data class MatchFoundResponse(val status: String, val matchId: String, val map: IntArray, val opponent: String)
 
+data class IsMyTurnResponse(val string: String, val lastShots: IntArray)
 data class SubmitBattleshipsInfo(val battleships: IntArray)
+data class ShotsFiredInfo(val x: Int, val y: Int)
 
 data class SimpleResponse(val status: String, val message: String) {
     constructor(error: Error) : this("failure", error.message ?: "")
@@ -153,8 +155,25 @@ fun Routing.basic() {
             getGameLogic(call) { logic, matchId, username ->
                 val submitBattleshipsInfo = call.receiveOrNull<SubmitBattleshipsInfo>()
                     ?: return@getGameLogic Failure<Unit>("Missing arguments!")
-                logic.setBattleships(submitBattleshipsInfo.battleships, username)
-                return@getGameLogic Success(Unit)
+                return@getGameLogic try {
+                    logic.setBattleships(submitBattleshipsInfo.battleships, username)
+                    Success(Unit)
+                } catch (e: IllegalArgumentException) {
+                    Failure<Unit>(e.message ?: "Unknown message")
+                }
+            }
+        }
+
+        post("shotsFired") {
+            getGameLogic(call) { logic, matchId, username ->
+                val shotsFiredInfo = call.receiveOrNull<ShotsFiredInfo>()
+                    ?: return@getGameLogic Failure<Unit>("Missing arguments!")
+                return@getGameLogic try {
+                    logic.shot(shotsFiredInfo.x,  shotsFiredInfo.y, username)
+                    Success(Unit)
+                } catch (e: IllegalArgumentException) {
+                    Failure<Unit>(e.message ?: "Unknown message")
+                }
             }
         }
 
