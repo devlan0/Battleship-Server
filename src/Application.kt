@@ -16,6 +16,9 @@ data class RegisterInfo(val username: String, val email: String, val hashedPassw
 data class LoginInfo(val username: String, val hashedPassword: String)
 data class LoginRespond(val status: String, val token: String)
 
+data class MatchFoundResponse(val status: String, val matchId: String, val map: IntArray, val opponent: String)
+
+data class SubmitBattleshipsInfo(val battleships: IntArray)
 
 data class SimpleResponse(val status: String, val message: String) {
     constructor(error: Error) : this("failure", error.message ?: "")
@@ -51,6 +54,23 @@ fun Application.module() {
     routing {
         basic()
     }
+}
+
+suspend fun getGameLogic(
+    call: ApplicationCall,
+    func: suspend (logic: GameLogic, matchId: String, username: String) -> Any
+) {
+    val username = call.request.headers["username"] ?: return
+    MongoDB.userGetMatch(username).patternFunc({ matchId ->
+        MatchManager.getGameLogic(matchId).patternFunc({ logic ->
+            call.respond(func(logic, matchId, username))
+        }, {
+            call.respond(SimpleResponse("failure", "Match not found. MatchId removed from database..."))
+            MongoDB.userRemoveMatch(username)
+        })
+    }, {
+        call.respond(SimpleResponse("failure", "Searching for matches..."))
+    })
 }
 
 fun Routing.basic() {
@@ -89,35 +109,54 @@ fun Routing.basic() {
 
     route("/withVal") {
         intercept(ApplicationCallPipeline.Features) {
-            println("INTERCEPT!!! penis")
             val username = call.request.headers["username"]
-            println("INTERCEPT 1")
             val token = call.request.headers["token"]
-            println("INTERCEPT 2")
             if (username == null || token == null) {
                 call.respond("username/token missing!")
                 return@intercept finish()
             }
             println("INTERCEPT 3: username: $username | token: $token")
-            if (!isTokenValid(username, token)){
+            if (!isTokenValid(username, token)) {
                 call.respond("invalid token!")
                 return@intercept finish()
             }
             println("INTERCEPT!!!! 4")
         }
+
         get("queueMatch") {
-            println("queueMatch!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            val username = call.request.headers["username"] ?: return@get
+            val username = call.request.headers["username"]
+            if (username == null) {
+                call.respond("Username is null!")
+                return@get
+            }
             call.respond(MatchManager.queueMatch(username))
         }
 
-        post("matchFound") {
-            val username = call.request.headers["username"] ?: return@post
-            MongoDB.userGetMatch(username).patternFunc({
-
-            },{
-                call.respond(SimpleResponse("failure", "Searching for matches..."))
-            })
+        get("matchFound") {
+            getGameLogic(call) { logic, matchId, username ->
+                val map = logic.getField(username)
+                val opponent = logic.getOtherPlayer(username)
+                return@getGameLogic MatchFoundResponse("success", matchId, map, opponent)
+            }
         }
+
+        get("isMyTurn") {
+            getGameLogic(call) { logic, matchId, username ->
+                return@getGameLogic if (logic.currentTurn == username)
+                    SimpleResponse("success", "It is your turn.")
+                else
+                    SimpleResponse("success", "Waiting for opponent!")
+            }
+        }
+
+        post("submitBattleships") {
+            getGameLogic(call) { logic, matchId, username ->
+                val submitBattleshipsInfo = call.receiveOrNull<SubmitBattleshipsInfo>()
+                    ?: return@getGameLogic Failure<Unit>("Missing arguments!")
+                logic.setBattleships(submitBattleshipsInfo.battleships, username)
+                return@getGameLogic Success(Unit)
+            }
+        }
+
     }
 }

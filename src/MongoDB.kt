@@ -86,6 +86,13 @@ object MongoDB {
 
     }
 
+    fun userRemoveMatch(username: String) {
+        val userData = userDataCollection.findOne(UserData::username eq username)
+            ?: return
+        userData.matchId = null
+        userDataCollection.updateOne(UserData::username eq username, userData)
+    }
+
 }
 
 
