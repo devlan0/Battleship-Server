@@ -9,6 +9,8 @@ public class GameLogic {
     private String _player1;
     private String _player2;
     private String _currentTurn; // 1 = _player1; 2 = _player2
+    private ArrayList<Integer> _lastShotsPlayer1;
+    private ArrayList<Integer> _lastShotsPlayer2;
     private static final int NUMBER_OF_SHIPS = 6;
 
 
@@ -37,7 +39,7 @@ public class GameLogic {
         }
         _field1 = new int[15][15];
         _field2 = new int[15][15];
-        //fill both fields with zeros
+        //fill both fields with values
         int o = 0;
         for(int i = 0; i<15; i++)
         {
@@ -48,6 +50,10 @@ public class GameLogic {
                 o++;
             }
         }
+        _lastShotsPlayer1 = new ArrayList<Integer>();
+        _lastShotsPlayer2 = new ArrayList<Integer>();
+
+
 
     }
 
@@ -67,6 +73,8 @@ public class GameLogic {
     public boolean shot(int x, int y, String playerName) throws IllegalArgumentException
     {
         if(playerName.equals(_player1)) {
+            _lastShotsPlayer1.add(x);
+            _lastShotsPlayer1.add(y);
             if (_field2[x][y] == 1)
             {
                 _field2[x][y] = -1;
@@ -78,6 +86,8 @@ public class GameLogic {
         }
         else if(playerName.equals(_player2))
         {
+            _lastShotsPlayer2.add(x);
+            _lastShotsPlayer2.add(y);
             if (_field1[x][y] == 1)
             {
                 _field1[x][y] = -1;
@@ -96,7 +106,7 @@ public class GameLogic {
 
     public void setBattleships(int[] ships, String playerName) throws IllegalArgumentException
     {
-        if(ships.length/2 != NUMBER_OF_SHIPS || !(playerName.equals(_player1) || playerName.equals(_player2)))
+        if(ships.length/4 != NUMBER_OF_SHIPS || !(playerName.equals(_player1) || playerName.equals(_player2)))
         {
             throw new IllegalArgumentException("Wrong amount of Ships or invalid player index.");
         }
@@ -107,8 +117,8 @@ public class GameLogic {
                     if (ships[i] == ships[i + 2]) //the x coordinate of two following coordinates is the same => the ship is oriented vertically
                     {
                         for (int l = 0; l < ships[i + 1] - ships[i + 3] + 2; l++) {
-                            if (_field1[i][i + 1 + l] == 0) {
-                                _field1[i][i + 1 + l] = 1;
+                            if (_field1[i][i + l] == 0) {
+                                _field1[i][i + l] = 1;
                             } else {
                                 throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
                             }
@@ -116,8 +126,8 @@ public class GameLogic {
                     } else if (ships[i + 1] == ships[i + 3]) // the y coordinate of two following coordinates is the same => the ship is faced horizontally
                     {
                         for (int l = 0; l < ships[i] - ships[i + 2] + 2; l++) {
-                            if (_field1[i + 1 + l][i] == 0) {
-                                _field1[i + 1 + l][i] = 1;
+                            if (_field1[i + l][i] == 0) {
+                                _field1[i + l][i] = 1;
                             } else {
                                 throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
                             }
@@ -227,9 +237,15 @@ public class GameLogic {
     }
 
 
-    public String getCurrentTurn()
+    public CurrentTurnResponse getCurrentTurn()
     {
-        return _currentTurn;
+        if(_currentTurn == _player1) {
+            CurrentTurnResponse rensponse = new CurrentTurnResponse(_currentTurn, _lastShotsPlayer1.toArray());
+            _lastShotsPlayer1.clear();
+        } else if(_currentTurn == _player2) {
+            CurrentTurnResponse rensponse = new CurrentTurnResponse(_currentTurn, _lastShotsPlayer2.toArray()));
+            _lastShotsPlayer2.clear();
+        }
     }
 
 
