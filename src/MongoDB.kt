@@ -56,7 +56,7 @@ object MongoDB {
 
         val newList = userData.tokens ?: mutableListOf<String>()
         val newToken = generateToken(0xA)
-        newList.add(generateToken(0xA))
+        newList.add(newToken)
         userData.tokens = newList
         userDataCollection.updateOne(UserData::username eq username, userData)
         return Success(newToken)

@@ -89,25 +89,29 @@ fun Routing.basic() {
 
     route("/withVal") {
         intercept(ApplicationCallPipeline.Features) {
-            println("INTERCEPT!!!")
+            println("INTERCEPT!!! penis")
             val username = call.request.headers["username"]
+            println("INTERCEPT 1")
             val token = call.request.headers["token"]
+            println("INTERCEPT 2")
             if (username == null || token == null) {
                 call.respond("username/token missing!")
                 return@intercept finish()
             }
-            if (isTokenValid(username, token))
-                return@intercept
-            else
+            println("INTERCEPT 3: username: $username | token: $token")
+            if (!isTokenValid(username, token)){
+                call.respond("invalid token!")
                 return@intercept finish()
+            }
+            println("INTERCEPT!!!! 4")
         }
-
-        get("/queueMatch") {
+        get("queueMatch") {
+            println("queueMatch!!!!!!!!!!!!!!!!!!!!!!!!!!")
             val username = call.request.headers["username"] ?: return@get
             call.respond(MatchManager.queueMatch(username))
         }
 
-        post("/matchFound") {
+        post("matchFound") {
             val username = call.request.headers["username"] ?: return@post
             MongoDB.userGetMatch(username).patternFunc({
 

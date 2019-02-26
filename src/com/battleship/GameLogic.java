@@ -1,4 +1,5 @@
-mport com.battleship.UserData;
+package com.battleship;
+
 
 public class GameLogic {
 
@@ -22,7 +23,7 @@ public class GameLogic {
     {
         _player1 = player1;
         _player2 = player2;
-        for(int i[]: _field1)
+        for(int[] i: _field1)
         {
             for(int j: i)
             {
@@ -56,6 +57,7 @@ public class GameLogic {
             }
             default: //exception
         }
+        return false;
     }
 
 
@@ -90,7 +92,7 @@ public class GameLogic {
                     {
                         for(int l = 0; l < ships[i]-ships[i+2]+2; l++)
                         {
-                            _if(_field2[i][i+1+l] == 0)
+                            if(_field2[i][i+1+l] == 0)
                             {
                                 _field2[i][i+1+l] = 1;
                             }
@@ -136,7 +138,7 @@ public class GameLogic {
         boolean lost = true;
         switch(playerIndex)
         {
-            case 1: for(int i[]: _field1)
+            case 1: for(int[] i: _field1)
             {
                 for(int j: i)
                 {
@@ -147,7 +149,7 @@ public class GameLogic {
                 }
                 return true;
             }
-            case 2: for(int i[]: _field2)
+            case 2: for(int[] i: _field2)
             {
                 for(int j: i)
                 {
@@ -160,6 +162,7 @@ public class GameLogic {
             }
             default: //exception
         }
+        return false;
     }
 
     //Hilfsmethoden:
