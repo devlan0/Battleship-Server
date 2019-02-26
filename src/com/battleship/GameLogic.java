@@ -38,31 +38,36 @@ public class GameLogic {
         _field1 = new int[15][15];
         _field2 = new int[15][15];
         //fill both fields with zeros
-        int count = 0;
+        int o = 0;
         for(int i = 0; i<15; i++)
         {
             for(int j = 0; j<15; j++)
             {
-                _field1[i][j] = count;
-                _field2[i][j] = count*(-1);
-                count++;
+                _field1[i][j] = o;
+                _field2[i][j] = o*(-1);
+                o++;
             }
         }
 
     }
+
     //testmethode
     /*public static void main(String[] args) {
         GameLogic testLogic = new GameLogic("Testspieler1", "Testspieler2");
-        for (int k : testLogic.getField("TestSpieler1")) {
-            System.out.print(k);
+        for (int k : testLogic.getField("Testspieler1")) {
+            System.out.print(k + " ");
+        }
+        System.out.println("");
+        for (int k : testLogic.getField("Testspieler2")) {
+            System.out.print(k + " ");
         }
     }*/
 
     //public methods
-    public boolean shot(int x, int y, String playerName)
+    public boolean shot(int x, int y, String playerName) throws IllegalArgumentException
     {
         if(playerName.equals(_player1)) {
-            if (_field2[x][y] == 1) //player1
+            if (_field2[x][y] == 1)
             {
                 _field2[x][y] = -1;
                 return true;
@@ -73,7 +78,7 @@ public class GameLogic {
         }
         else if(playerName.equals(_player2))
         {
-            if (_field1[x][y] == 1) //player2
+            if (_field1[x][y] == 1)
             {
                 _field1[x][y] = -1;
                 return true;
@@ -198,11 +203,10 @@ public class GameLogic {
         {
             int[] streamField = new int[225];
             int count = 0;
-            for(int r = 0; r<15; r++)
-            {
-                for(int c = 0; c<15; c++)
-                {
+            for(int r = 0; r<15; r++) {
+                for(int c = 0; c<15; c++) {
                     streamField[count] = _field1[r][c];
+                    count++;
                 }
             }
             return streamField;
@@ -212,9 +216,9 @@ public class GameLogic {
             int[] streamField = new int[225];
             int count = 0;
             for (int r = 0; r < 15; r++) {
-                for (int c = 0; c < 15; c++)
-                {
+                for (int c = 0; c < 15; c++) {
                     streamField[count] = _field2[r][c];
+                    count++;
                 }
             }
             return streamField;
