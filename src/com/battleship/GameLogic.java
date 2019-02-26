@@ -38,12 +38,14 @@ public class GameLogic {
         _field1 = new int[15][15];
         _field2 = new int[15][15];
         //fill both fields with zeros
+        int count = 0;
         for(int i = 0; i<15; i++)
         {
             for(int j = 0; j<15; j++)
             {
-                _field1[i][j] = 0;
-                _field2[i][j] = 0;
+                _field1[i][j] = count;
+                _field2[i][j] = count*(-1);
+                count++;
             }
         }
 
