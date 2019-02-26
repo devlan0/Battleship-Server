@@ -101,11 +101,11 @@ public class GameLogic {
     }
 
 
-    public void setBattleships(int[] ships, String playerName)
+    public void setBattleships(int[] ships, String playerName) throws IllegalArgumentException
     {
         if(ships.length/4 != NUMBER_OF_SHIPS || !(playerName.equals(_player1) || playerName.equals(_player2)))
         {
-            throw new IllegalArgumentException("Wrong amount of Ships or invalid player index.");
+            throw new IllegalArgumentException("Wrong amount of Ships or invalid player name.");
         }
         else
         {
@@ -117,20 +117,18 @@ public class GameLogic {
                             if (_field1[i][i + l] == 0) {
                                 _field1[i][i + l] = 1;
                             } else {
-                                throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
+                                throw new IllegalArgumentException("not placed in water");
                             }
                         }
                     } else if (ships[i + 1] == ships[i + 3]) // the y coordinate of two following coordinates is the same => the ship is faced horizontally
                     {
-                        for (int l = 0; l < Math.abs(ships[i+2] - ships[i]) + 1; l++) {
+                        for (int l = 0; l < Math.abs(ships[i + 2] - ships[i]) + 1; l++) {
                             if (_field1[i + l][i] == 0) {
                                 _field1[i + l][i] = 1;
                             } else {
-                                throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
+                                throw new IllegalArgumentException("not placed in water");
                             }
                         }
-                    } else {
-                        System.out.println("Es hat nicht zu hundert Prozent geklappt.");
                     }
                 }
             }
@@ -148,7 +146,7 @@ public class GameLogic {
                             }
                             else
                             {
-                                throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
+                                throw new IllegalArgumentException("not placed in water");
                             }
                         }
                     }
@@ -162,13 +160,9 @@ public class GameLogic {
                             }
                             else
                             {
-                                throw new IllegalArgumentException("At least one of your ships are located at a place where ships don't belong.");
+                                throw new IllegalArgumentException("not placed in water");
                             }
                         }
-                    }
-                    else
-                    {
-                        System.out.println("Es hat nicht zu hundert Prozent geklappt.");
                     }
                 }
             }
