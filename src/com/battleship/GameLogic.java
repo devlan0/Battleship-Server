@@ -8,7 +8,7 @@ public class GameLogic {
     //field integer meaning: 0 = water; 1 = living ship location; -1 = dead ship location; 2 = island
     private String _player1;
     private String _player2;
-    private int _currentTurn; // 1 = _player1; 2 = _player2
+    private String _currentTurn; // 1 = _player1; 2 = _player2
     private static final int NUMBER_OF_SHIPS = 6;
 
 
@@ -57,7 +57,7 @@ public class GameLogic {
                 _field2[x][y] = -1;
                 return true;
             } else {
-                _currentTurn = 2;
+                _currentTurn = _player2;
                 return false;
             }
         }
@@ -68,7 +68,7 @@ public class GameLogic {
                 _field1[x][y] = -1;
                 return true;
             } else {
-                _currentTurn = 1;
+                _currentTurn = _player1;
                 return false;
             }
         }
@@ -213,7 +213,7 @@ public class GameLogic {
     }
 
 
-    public int getCurrentTurn()
+    public String getCurrentTurn()
     {
         return _currentTurn;
     }
