@@ -28,23 +28,13 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="Gradle: io.ktor:ktor-server-engine:1.1.1">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Could not find io.ktor:ktor-server-engine:1.1.1.&#13;&#10;Searched in the following locations:&#13;&#10;  - file:/C:/Users/Hekto/.m2/repository/io/ktor/ktor-server-engine/1.1.1/ktor-server-engine-1.1.1.pom&#13;&#10;  - file:/C:/Users/Hekto/.m2/repository/io/ktor/ktor-server-engine/1.1.1/ktor-server-engine-1.1.1.jar&#13;&#10;  - https:/jcenter.bintray.com/io/ktor/ktor-server-engine/1.1.1/ktor-server-engine-1.1.1.pom&#13;&#10;  - https:/jcenter.bintray.com/io/ktor/ktor-server-engine/1.1.1/ktor-server-engine-1.1.1.jar&#13;&#10;  - https:/kotlin.bintray.com/ktor/io/ktor/ktor-server-engine/1.1.1/ktor-server-engine-1.1.1.pom&#13;&#10;  - https:/kotlin.bintray.com/ktor/io/ktor/ktor-server-engine/1.1.1/ktor-server-engine-1.1.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="Gradle: org.litote.kmongo:kmongo:3.9.0" level="project" />
-    <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.24.Final" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-server-engine:1.1.1" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.11" level="project" />
-    <orderEntry type="library" name="Gradle: io.ktor:ktor-server-core:1.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.3.11" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-codec-http:4.1.24.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" name="Gradle: io.ktor:ktor-gson:1.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-utils:1.1.1" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-io-jvm:0.1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-io-jvm:0.1.3" level="project" />
@@ -68,7 +58,7 @@
     <orderEntry type="library" name="Gradle: io.ktor:ktor-http-cio:1.1.1" level="project" />
     <orderEntry type="library" name="Gradle: org.litote.kmongo:kmongo-jackson-mapping:3.9.0" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-handler:4.1.24.Final" level="project" />
-    <orderEntry type="library" name="Gradle: io.ktor:ktor-utils:1.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-gson:1.1.1" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.4.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore-nio:4.4.6" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
@@ -100,11 +90,13 @@
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.11" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-io:0.1.3" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-classic:1.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.ktor:ktor-server-core:1.1.1" level="project" />
     <orderEntry type="library" name="Gradle: io.ktor:ktor-client-core-jvm:1.1.1" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:atomicfu:0.12.0" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-buffer:4.1.24.Final" level="project" />
+    <orderEntry type="library" name="Gradle: org.litote.kmongo:kmongo:3.9.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.24.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.24.Final" level="project" />
   </component>
 </module>
