@@ -4,7 +4,6 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.concurrent.thread
 
-
 object MatchManager {
 
     private val activeMatches: MutableMap<String, GameLogic> = mutableMapOf()

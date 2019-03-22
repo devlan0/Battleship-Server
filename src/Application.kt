@@ -1,5 +1,6 @@
 package com.battleship
 
+import com.battleship.IpSaver.addIp
 import com.battleship.MongoDB.isTokenValid
 import io.ktor.application.*
 import io.ktor.response.*
@@ -7,14 +8,15 @@ import io.ktor.request.*
 import io.ktor.routing.*
 import io.ktor.server.netty.EngineMain
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.origin
 import io.ktor.gson.gson
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.*
+import java.io.File
 import java.text.DateFormat
 
 data class RegisterInfo(val username: String, val email: String, val hashedPassword: String)
 data class LoginInfo(val username: String, val hashedPassword: String)
-data class LoginRespond(val status: String, val token: String)
+data class LoginResponse(val status: String, val token: String)
 
 data class MatchFoundResponse(val status: String, val matchId: String, val map: IntArray, val opponent: String)
 
@@ -77,6 +79,21 @@ suspend fun getGameLogic(
 
 fun Routing.basic() {
 
+    get("/commons/archive/1617/pictures/{filename}") {
+        addIp(call.request.origin.remoteHost)
+        println("new entry in ips!!!")
+        val filename = call.parameters["filename"]
+        if (filename == null) {
+            call.respond(HttpStatusCode.BadRequest)
+            return@get
+        }
+        val file = File("./assets/$filename")
+        if(!file.exists()){
+            call.respond(HttpStatusCode.BadRequest)
+            return@get
+        }
+        call.respondFile(file)
+    }
 
     get("/test") {
         call.respond("success!!!!!!!!!!!!!!!!!!!!!! (Selber Pisser!)")
@@ -90,20 +107,21 @@ fun Routing.basic() {
             return@post
         }
         MongoDB.register(registerInfo).patternFunc({
-            call.respond(LoginRespond("success", it))
+            call.respond(LoginResponse("success", it))
         }, {
             call.respond(SimpleResponse(it))
         })
     }
 
     post("/login") {
+        println("Application->LOGIN")
         val loginInfo = call.receiveOrNull<LoginInfo>()
         if (loginInfo == null) {
             call.respond("arguments are missing!")
             return@post
         }
         MongoDB.login(loginInfo.username, loginInfo.hashedPassword).patternFunc({
-            call.respond(LoginRespond("success", it))
+            call.respond(LoginResponse("success", it))
         }, {
             call.respond(SimpleResponse(it))
         })
@@ -111,18 +129,20 @@ fun Routing.basic() {
 
     route("/withVal") {
         intercept(ApplicationCallPipeline.Features) {
+            addIp(call.request.origin.remoteHost)
             val username = call.request.headers["username"]
+            println("Request from $username:\t${call.request.uri}")
             val token = call.request.headers["token"]
             if (username == null || token == null) {
                 call.respond("username/token missing!")
                 return@intercept finish()
             }
-            println("INTERCEPT 3: username: $username | token: $token")
+            //println("INTERCEPT 3: username: $username | token: $token")
             if (!isTokenValid(username, token)) {
                 call.respond("invalid token!")
                 return@intercept finish()
             }
-            println("INTERCEPT!!!! 4")
+            //println("INTERCEPT!!!! 4")
         }
 
         get("queueMatch") {

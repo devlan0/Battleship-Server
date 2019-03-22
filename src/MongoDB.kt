@@ -33,6 +33,7 @@ object MongoDB {
         return Success(userData)
     }
 
+
     fun register(registerInfo: RegisterInfo): Capsula<String> {
         println("MongoDB->REGISTER!!!!!!")
         if (0 < userDataCollection.countDocuments(UserData::username eq registerInfo.username))
