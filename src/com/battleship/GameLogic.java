@@ -117,7 +117,7 @@ public class GameLogic {
         }
     }
 
-    /*  public int[] getField(String playerName) throws IllegalArgumentException //as a one-dimensional array
+     public int[] getField(String playerName) throws IllegalArgumentException //as a one-dimensional array
     {
         if(playerName.equals(_player1.getName()))
         {
@@ -139,7 +139,11 @@ public class GameLogic {
         }
         return streamField;
     }
-    */
+
+    public String getCurrentTurnAsString() { // only used in one method of Application.kt, suboptimal solution
+        return _currentPlayer.getName();
+    }
+
 
   /*  public CurrentTurnResponse getCurrentTurn()
     {
