@@ -100,7 +100,14 @@ fun Routing.basic() {
     }
 
     post("/register") {
+
+        if(IpSaver.isBlocked(call.request.origin.remoteHost)){
+            call.respond("Access denied!")
+            return@post finish()
+        }
         println("Application->REGISTER")
+
+        addIp(call.request.origin.remoteHost)
         val registerInfo = call.receiveOrNull<RegisterInfo>()
         if (registerInfo == null) {
             call.respond("arguments are missing!")
@@ -114,8 +121,16 @@ fun Routing.basic() {
     }
 
     post("/login") {
-        println("Application->LOGIN")
+
+        if(IpSaver.isBlocked(call.request.origin.remoteHost)){
+            call.respond("Access denied!")
+            return@post finish()
+        }
+        addIp(call.request.origin.remoteHost)
         val loginInfo = call.receiveOrNull<LoginInfo>()
+        println()
+        println("loginInfo:\t$loginInfo")
+        println()
         if (loginInfo == null) {
             call.respond("arguments are missing!")
             return@post
@@ -123,6 +138,7 @@ fun Routing.basic() {
         MongoDB.login(loginInfo.username, loginInfo.hashedPassword).patternFunc({
             call.respond(LoginResponse("success", it))
         }, {
+            val hugo = SimpleResponse(it)
             call.respond(SimpleResponse(it))
         })
     }
@@ -130,6 +146,10 @@ fun Routing.basic() {
     route("/withVal") {
         intercept(ApplicationCallPipeline.Features) {
             addIp(call.request.origin.remoteHost)
+            if(IpSaver.isBlocked(call.request.origin.remoteHost)){
+                call.respond("Access denied!")
+                return@intercept finish()
+            }
             val username = call.request.headers["username"]
             println("Request from $username:\t${call.request.uri}")
             val token = call.request.headers["token"]

@@ -12,13 +12,17 @@ data class IpEntry(val ip: String, val timestamp: String)
 object IpSaver {
 
     private val ip_collection: MongoCollection<IpEntry>
+    private val blockedAddresses: HashSet<String>
 
     init {
         val uri = MongoClientURI("mongodb://127.0.0.1:27017")
         val client = KMongo.createClient(uri)
         val database = client.getDatabase("SchiffeVersenken")
         ip_collection = database.getCollection<IpEntry>()
+        blockedAddresses = hashSetOf("92.210.29.28")
     }
+
+    fun isBlocked(ip:String) = ip in blockedAddresses
 
     fun addIp(address : String){
         val timestamp = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
