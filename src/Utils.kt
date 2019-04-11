@@ -10,7 +10,19 @@ infix fun <T, R> T.pipe(func: (T) -> R): R = func(this)
 
 fun generateToken(length: Long): String {
     // val source = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜabcdefghijklmnopqrstuvwxyzäöüß0123456789"
-val source = arrayOf("PENIS", "SCHEIDE", "MUSCHI", "SCHWANZ", "LÖRRES", "TITTEN", "KACKEN", "FICKEN", "Blubberwasser", "ADOLF", "HITLER")
+    val source = arrayOf(
+        "PENIS",
+        "SCHEIDE",
+        "MUSCHI",
+        "SCHWANZ",
+        "LÖRRES",
+        "TITTEN",
+        "KACKEN",
+        "FICKEN",
+        "Blubberwasser",
+        "ADOLF",
+        "HITLER"
+    )
     return Random().ints(length, 0, source.size)
         .asSequence()
         .map(source::get)

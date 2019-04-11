@@ -1,5 +1,6 @@
 package com.battleship
 
+import GameLogic
 import com.battleship.IpSaver.addIp
 import com.battleship.MongoDB.isTokenValid
 import io.ktor.application.*
@@ -18,11 +19,19 @@ data class RegisterInfo(val username: String, val email: String, val hashedPassw
 data class LoginInfo(val username: String, val hashedPassword: String)
 data class LoginResponse(val status: String, val token: String)
 
-data class MatchFoundResponse(val status: String, val matchId: String, val map: IntArray, val opponent: String)
+data class MatchFoundResponse(
+    val status: String,
+    val matchId: String,
+    val map: IntArray,
+    val mapOpponent: IntArray,
+    val opponent: String
+)
 
-data class CurrentTurnResponse(val currentUser: String, val lastShots: List<Int>)
+data class CurrentTurnResponse(val status: String, val currentUser: String, val lastShots: Map<String, List<Int>>)
 data class SubmitBattleshipsInfo(val battleships: IntArray)
 data class ShotsFiredInfo(val x: Int, val y: Int)
+
+data class IsLostResponse(val status: String, val isLost:Boolean)
 
 data class SimpleResponse(val status: String, val message: String) {
     constructor(error: Error) : this("failure", error.message ?: "")
@@ -88,7 +97,7 @@ fun Routing.basic() {
             return@get
         }
         val file = File("./assets/$filename")
-        if(!file.exists()){
+        if (!file.exists()) {
             call.respond(HttpStatusCode.BadRequest)
             return@get
         }
@@ -101,7 +110,7 @@ fun Routing.basic() {
 
     post("/register") {
 
-        if(IpSaver.isBlocked(call.request.origin.remoteHost)){
+        if (IpSaver.isBlocked(call.request.origin.remoteHost)) {
             call.respond("Access denied!")
             return@post finish()
         }
@@ -122,7 +131,7 @@ fun Routing.basic() {
 
     post("/login") {
 
-        if(IpSaver.isBlocked(call.request.origin.remoteHost)){
+        if (IpSaver.isBlocked(call.request.origin.remoteHost)) {
             call.respond("Access denied!")
             return@post finish()
         }
@@ -146,7 +155,7 @@ fun Routing.basic() {
     route("/withVal") {
         intercept(ApplicationCallPipeline.Features) {
             addIp(call.request.origin.remoteHost)
-            if(IpSaver.isBlocked(call.request.origin.remoteHost)){
+            if (IpSaver.isBlocked(call.request.origin.remoteHost)) {
                 call.respond("Access denied!")
                 return@intercept finish()
             }
@@ -165,6 +174,18 @@ fun Routing.basic() {
             //println("INTERCEPT!!!! 4")
         }
 
+        get("dequeueMatch") {
+            println()
+            println("dequeueMatch")
+            println()
+            val username = call.request.headers["username"]
+            if (username == null) {
+                call.respond("Username is null!")
+                return@get
+            }
+            call.respond(MatchManager.dequeueMatch(username))
+        }
+
         get("queueMatch") {
             val username = call.request.headers["username"]
             if (username == null) {
@@ -176,9 +197,11 @@ fun Routing.basic() {
 
         get("matchFound") {
             getGameLogic(call) { logic, matchId, username ->
-                val map = logic.getField(username)
                 val opponent = logic.getOtherPlayer(username)
-                return@getGameLogic MatchFoundResponse("success", matchId, map, opponent)
+                val map = logic.getField(username)
+                val mapOpponent = logic.getField(opponent)
+
+                return@getGameLogic MatchFoundResponse("success", matchId, map, mapOpponent, opponent)
             }
         }
 
@@ -213,11 +236,25 @@ fun Routing.basic() {
                 val shotsFiredInfo = call.receiveOrNull<ShotsFiredInfo>()
                     ?: return@getGameLogic Failure<Unit>("Missing arguments!")
                 return@getGameLogic try {
-                    logic.shot(shotsFiredInfo.x, shotsFiredInfo.y, username)
+
+                    val succ = logic.shot(shotsFiredInfo.x, shotsFiredInfo.y, username)
+                    call.respond(
+                        if (succ)
+                            SimpleResponse("success", "3")
+                        else
+                            SimpleResponse("success", "4")
+                    )
                     Success(Unit)
                 } catch (e: IllegalArgumentException) {
                     Failure<Unit>(e.message ?: "Unknown message")
                 }
+            }
+        }
+
+        get("isLost"){
+            getGameLogic(call){logic, matchId, username ->
+                val isLost = logic.didILose(username)
+                IsLostResponse("success", isLost)
             }
         }
 
