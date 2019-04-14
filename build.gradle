@@ -37,12 +37,6 @@ repositories {
 
 dependencies {
 
-    compile "io.ktor:ktor-server-engine:$ktor_version"
-    compile "io.ktor:ktor-utils-jvm:$ktor_version"
-    compile "io.ktor:ktor-http-jvm:$ktor_version"
-
-
-
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "io.ktor:ktor-server-netty:$ktor_version"
     compile "ch.qos.logback:logback-classic:$logback_version"
@@ -51,11 +45,14 @@ dependencies {
     compile "io.ktor:ktor-client-apache:$ktor_version"
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
 
+    compile "io.ktor:ktor-utils-jvm:$ktor_version"
+    compile "io.ktor:ktor-http-jvm:$ktor_version"
+
+
     compile ("io.ktor:ktor-server-core:$ktor_version") {
         exclude group: 'io.ktor', module: 'ktor-utils-native'
         exclude group: 'io.ktor', module: 'ktor-http-native'
     }
-
 
 
     compile "io.ktor:ktor-gson:$ktor_version"
