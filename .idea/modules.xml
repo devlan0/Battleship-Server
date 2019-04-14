@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/media.iml" filepath="$PROJECT_DIR$/.idea/modules/media.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/media_main.iml" filepath="$PROJECT_DIR$/.idea/modules/media_main.iml" group="media" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/media_test.iml" filepath="$PROJECT_DIR$/.idea/modules/media_test.iml" group="media" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/battleships.iml" filepath="$PROJECT_DIR$/.idea/modules/battleships.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/battleships_main.iml" filepath="$PROJECT_DIR$/.idea/modules/battleships_main.iml" group="battleships" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/battleships_test.iml" filepath="$PROJECT_DIR$/.idea/modules/battleships_test.iml" group="battleships" />
     </modules>
   </component>
 </project>
