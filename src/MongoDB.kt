@@ -14,16 +14,23 @@ data class UserData(
     var matchId: String?
 )
 
+data class MatchData(
+    val matchId: String,
+    val status: String,
+    val competitors: Array<String>
+)
 
 object MongoDB {
 
     private val userDataCollection: MongoCollection<UserData>
+    private val matchDataCollection: MongoCollection<MatchData>
 
     init {
         val uri = MongoClientURI("mongodb://127.0.0.1:27017")
         val client = KMongo.createClient(uri)
         val database = client.getDatabase("SchiffeVersenken")
         userDataCollection = database.getCollection<UserData>()
+        matchDataCollection = database.getCollection<MatchData>()
     }
 
 
@@ -94,6 +101,31 @@ object MongoDB {
         userDataCollection.updateOne(UserData::username eq username, userData)
     }
 
+
+    private tailrec fun generateMatchId(): String {
+        val matchId = generateToken(10)
+        val count = matchDataCollection.countDocuments(MatchData::matchId eq matchId)
+        return if (count > 0)
+            generateMatchId()
+        else
+            matchId
+    }
+
+    fun insertMatch(competitors: Array<String>, status: String): MatchData {
+        val data = MatchData(
+            generateMatchId(),
+            status,
+            competitors
+        )
+        matchDataCollection.insertOne(data)
+        return data
+    }
+
+    fun getMatch(matchId: String): Capsula<MatchData> {
+        val matchData = matchDataCollection.findOne(MatchData::matchId eq matchId)
+            ?: return Failure("MatchId does not exist!")
+        return Success(matchData)
+    }
 }
 
 

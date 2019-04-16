@@ -1,4 +1,4 @@
-import com.battleship.CurrentTurnResponse
+import com.battleship.MatchStatusResponse
 import java.util.*
 
 class GameLogic
@@ -32,19 +32,23 @@ constructor(//field integer meaning: 0 = water; 1 = living ship location; -1 = d
     //} else if (_currentTurn.equals(_player2)) {
     //    _lastShotsPlayer2.clear();
     //    return new CurrentTurnResponse("success",_currentTurn, _lastShotsPlayer2);
-    val currentTurn: CurrentTurnResponse
+    val currentTurn: MatchStatusResponse
         get() {
-
             if (_currentTurn == _player1 || _currentTurn == _player2) {
+
+                // check whether someone lost the game
+
                 val lastShots = mapOf(
                     _player1 to _lastShotsPlayer1,
                     _player2 to _lastShotsPlayer2
                 )
-                return CurrentTurnResponse("success", _currentTurn!!, lastShots)
+                return MatchStatusResponse("success", "active", _currentTurn!!, lastShots)
             } else {
                 throw IllegalArgumentException("Current turn system broken! Server is exploding!")
             }
         }
+
+
 
     init {
         val random01 = Math.round(Math.random())
@@ -65,18 +69,6 @@ constructor(//field integer meaning: 0 = water; 1 = living ship location; -1 = d
         _lastShotsPlayer1 = ArrayList()
         _lastShotsPlayer2 = ArrayList()
     }
-
-    //testmethode
-    /*public static void main(String[] args) {
-        GameLogic testLogic = new GameLogic("Testspieler1", "Testspieler2");
-        for (int k : testLogic.getField("Testspieler1")) {
-            System.out.print(k + " ");
-        }
-        System.out.println("");
-        for (int k : testLogic.getField("Testspieler2")) {
-            System.out.print(k + " ");
-        }
-    }*/
 
     //public methods
     @Throws(IllegalArgumentException::class)

@@ -27,11 +27,17 @@ data class MatchFoundResponse(
     val opponent: String
 )
 
-data class CurrentTurnResponse(val status: String, val currentUser: String, val lastShots: Map<String, List<Int>>)
+data class MatchStatusResponse(
+    val status: String,
+    val matchStatus: String,
+    val currentUser: String,
+    val lastShots: Map<String, List<Int>>
+)
+
 data class SubmitBattleshipsInfo(val battleships: IntArray)
 data class ShotsFiredInfo(val x: Int, val y: Int)
 
-data class IsLostResponse(val status: String, val isLost:Boolean)
+data class IsLostResponse(val status: String, val isLost: Boolean)
 
 data class SimpleResponse(val status: String, val message: String) {
     constructor(error: Error) : this("failure", error.message ?: "")
@@ -73,7 +79,11 @@ suspend fun getGameLogic(
     call: ApplicationCall,
     func: suspend (logic: GameLogic, matchId: String, username: String) -> Any
 ) {
-    val username = call.request.headers["username"] ?: return
+    val username = call.request.headers["username"]
+    if (username == null) {
+        call.respond(SimpleResponse("failure", "Username was null, du Sackgesicht!"))
+        return
+    }
     MongoDB.userGetMatch(username).patternFunc({ matchId ->
         MatchManager.getGameLogic(matchId).patternFunc({ logic ->
             call.respond(func(logic, matchId, username))
@@ -205,16 +215,29 @@ fun Routing.basic() {
             }
         }
 
-        get("currentTurn") {
-            getGameLogic(call) { logic, _, _ ->
-                val currentTurnResponse = logic.currentTurn
-                return@getGameLogic try {
-                    logic.currentTurn
+        get("matchStatus") {
 
-                } catch (e: IllegalArgumentException) {
-                    Failure<Unit>(e.message ?: "Unknown message")
-                }
+            val matchId = call.request.headers["matchId"]
+            if (matchId == null) {
+                call.respond<Unit>(Failure("matchId was null, du Blödarsch!"))
+                return@get
             }
+            MongoDB.getMatch(matchId).patternFunc({ matchData ->
+
+                if (matchData.status == "active")
+                    getGameLogic(call) { logic, _, _ ->
+                        val currentTurnResponse = logic.currentTurn
+                        return@getGameLogic try {
+                            logic.currentTurn
+                        } catch (e: IllegalArgumentException) {
+                            Failure<Unit>(e.message ?: "Unknown message")
+                        }
+                    }
+                else
+                    call.respond(MatchStatusResponse("success", matchData.status, "", mapOf()))
+            }, { error -> call.respond(error) })
+
+
         }
 
         post("submitBattleships") {
@@ -251,8 +274,8 @@ fun Routing.basic() {
             }
         }
 
-        get("isLost"){
-            getGameLogic(call){logic, matchId, username ->
+        get("isLost") {
+            getGameLogic(call) { logic, matchId, username ->
                 val isLost = logic.didILose(username)
                 IsLostResponse("success", isLost)
             }
