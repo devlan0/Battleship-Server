@@ -2,6 +2,10 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="battleship_main" target="1.8" />
+      <module name="battleship_test" target="1.8" />
+      <module name="battleships_main" target="1.8" />
+      <module name="battleships_test" target="1.8" />
       <module name="media_main" target="1.8" />
       <module name="media_test" target="1.8" />
     </bytecodeTargetLevel>
