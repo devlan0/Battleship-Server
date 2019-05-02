@@ -144,7 +144,7 @@ fun Routing.basic() {
 
         get("currentTurn") {
             getGameLogic(call) { logic, matchId, username ->
-                return@getGameLogic if (logic.getCurrentTurnAsString() == username) //angepasst, vorher logic.currentTurn == username
+                return@getGameLogic if (logic.currentTurn == username)
                     SimpleResponse("success", "It is your turn.")
                 else
                     SimpleResponse("success", "Waiting for opponent!")
