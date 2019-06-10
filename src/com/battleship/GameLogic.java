@@ -1,24 +1,25 @@
 package com.battleship;
-import java.util.*;
+
+//import java.util.*;
 public class GameLogic {
 
     private Player _player1;
     private Player _player2;
     private Player _currentPlayer; //determines whose turn it is at the moment
     private Player _relevantPlayer; //relevant for intern methods
-    private static final int NUMBER_OF_SHIPS = 6;
+    private static final int NUMBER_OF_SHIPS = 3;
 
+    //************************************************************
+    //                      Constructors
 
-    //Constructors
-
+    //Basic constructor, identical to GameLogic.kt's constructor
     public GameLogic(String player1, String player2) throws IllegalArgumentException {
         _player1 = new Player(player1);
         _player2 = new Player(player2);
         long random01 = Math.round(Math.random());
         if (random01==0) {
             _currentPlayer = _player1;
-        }
-        else {
+        } else {
             _currentPlayer = _player2;
         }
         //fill both fields with zeroes
@@ -30,11 +31,12 @@ public class GameLogic {
         }
     }
 
+    //Optional future contructor with adjustable fields:
     /*public GameLogic(String player1, String player2, int[][] defaultField1, int[][] defaultField2)
 {
     ...
 }*/
-
+    //************************************************************
 
     public boolean shot(int x, int y, String playerName) throws IllegalArgumentException {
         updateRelevantPlayer(playerName);
@@ -108,7 +110,7 @@ public class GameLogic {
     }
 
     private void updateRelevantPlayer(String playerName) throws IllegalArgumentException {
-        if(playerName.equals(_player1)) {
+        if (playerName.equals(_player1.getName())) {
             _relevantPlayer = _player1;
         } else if (playerName.equals(_player2.getName())) {
             _relevantPlayer = _player2;
@@ -117,38 +119,34 @@ public class GameLogic {
         }
     }
 
-     public int[] getField(String playerName) throws IllegalArgumentException //as a one-dimensional array
-    {
-        if(playerName.equals(_player1.getName()))
-        {
-            _relevantPlayer = _player1;
-        }
-        else if(playerName.equals(_player2.getName()))
-        {
-            _relevantPlayer = _player2;
-        } else {
-            throw new IllegalArgumentException("Invalid player name.");
-        }
+    public int[] getField(String playerName) throws IllegalArgumentException {
+        updateRelevantPlayer(playerName);
         int[] streamField = new int[225];
         int count = 0;
         for (int r = 0; r < 15; r++) {
             for (int c = 0; c < 15; c++) {
-                streamField[count] = _relevantPlayer.getField(r,c);
+                streamField[count] = _relevantPlayer.getField(r, c);
                 count++;
             }
         }
         return streamField;
     }
 
+
+    //Missing: public MatchStatusResponse currentTurn
+
+
+    //Deprecated methods:
+    /*
     public String getCurrentTurnAsString() { // only used in one method of Application.kt, suboptimal solution
         return _currentPlayer.getName();
     }
 
-
-  /*  public CurrentTurnResponse getCurrentTurn()
+    public CurrentTurnResponse getCurrentTurn()
     {
         CurrentTurnResponse response = new CurrentTurnResponse(_currentPlayer.getName(), _currentPlayer.getLastShots().toArray());
         _currentPlayer.clearShots();
         return response;
-    } */
+    }
+    */
 }
