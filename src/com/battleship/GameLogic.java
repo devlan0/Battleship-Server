@@ -1,5 +1,10 @@
 package com.battleship;
 
+import java.util.HashMap;
+import java.util.ArrayList;
+
+import com.battleship.MatchStatusResponse;
+
 //import java.util.*;
 public class GameLogic {
 
@@ -133,7 +138,12 @@ public class GameLogic {
     }
 
 
-    //Missing: public MatchStatusResponse currentTurn
+    public MatchStatusResponse currentTurn() {
+        HashMap<String, ArrayList<Integer>> lastShots = new HashMap<String, ArrayList<Integer>>();
+        lastShots.put(_player1.getName(), _player1.getLastShots());
+        lastShots.put(_player2.getName(), _player2.getLastShots());
+        return new MatchStatusResponse("success", "active", _currentPlayer.toString(), lastShots);
+    }
 
 
     //Deprecated methods:
